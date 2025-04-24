@@ -30,9 +30,7 @@ export default function Home() {
   };
 
   const fetchMessages =  async () => {
-    const res = await fetch('/api/messages');
-    const data = await res.json();
-    console.log(data);
+    const data = await getAllMessages();
     setMessages(data.data);
   };
 
