@@ -19,21 +19,23 @@ const MessageSchema = new mongoose.Schema({
     location: {
         lat: {
             type: Number,
-            required: false,
+            required: true,
         },
         long: {
             type: Number,
-            required: false,
+            required: true,
         },
     },
     rating: {
         positive: {
             type: Number,
-            required: false,
+            default: 0,
+            required: true,
         },
         negative: {
             type: Number,
-            required: false,
+            default: 0,
+            required: true,
         },
     },
     timestamp: {
