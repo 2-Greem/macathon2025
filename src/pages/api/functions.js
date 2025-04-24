@@ -27,7 +27,7 @@ async function sendMessage( username, content, latitude, longitude) {
         throw new Error(result.error || 'Failed to send message');
       }
   
-      return result.data; // the created message
+      return result; // the created message
     } catch (error) {
       console.error('Error sending message:', error.message);
       throw error;
@@ -48,6 +48,26 @@ async function getAllMessages(){
     console.error('Error retrieving messages:', error.message);
     throw error;
   }
-  
 }
-export { sendMessage, getAllMessages };
+
+async function rateMessage(message_id, type){
+  try {
+    const res = await fetch('/api/messages/rate', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messageId: message_id,
+        type: type, // 'positive' or 'negative'
+      }),
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error('Failed to rate message:', err);
+  }
+}
+
+export { sendMessage, getAllMessages, rateMessage };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { sendMessage, getAllMessages } from './api/functions';
+import { sendMessage, getAllMessages, rateMessage } from './api/functions';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -81,6 +81,15 @@ export default function Home() {
     }
   };
 
+  const voteYes = async (e) => {
+    rateMessage("0", 'positive');
+    fetchMessages();
+  }
+
+  const voteNo = async (e) => {
+    rateMessage("0", 'negative');
+    fetchMessages();
+  }
   
 
   return (
@@ -131,10 +140,17 @@ export default function Home() {
         <ul>
           {messages.map((message) => (
             <li key={message._id}>
-              {message.username} - {message.content}
+              {message.username} - {message.content} - Good: {message.rating.positive} Bad: {message.rating.negative}
             </li>
           ))}
         </ul>
+      </div>
+      <div>
+        <h2>
+          Vote on a random ass comment
+        </h2>
+        <button onClick={voteYes}>Helpful</button>
+        <button onClick={voteNo}>Unhelpful</button>
       </div>
     </div>
   );
