@@ -3,8 +3,8 @@ async function sendMessage( username, content, latitude, longitude) {
       username: username,
       content: content,
       location: {
-        latitude: latitude,
-        longitude: longitude
+        lat: latitude,
+        long: longitude
       },
       rating: {
         positive: 0,
