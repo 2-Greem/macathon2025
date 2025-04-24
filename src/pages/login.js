@@ -6,7 +6,7 @@ export default function Home() {
     <div>
       <main className="min-h-screen bg-zinc-900 text-zinc-200">
         <Header />
-        The Map Page
+        The login Page
       </main>
     </div>
   );
