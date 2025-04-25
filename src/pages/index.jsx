@@ -87,7 +87,7 @@ export default function Home() {
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)
               }}
-              className="absolute bottom-6 left-6 z-20 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute left-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Show nearby messages"
             >
               <MessageCircle className="h-6 w-6" />
@@ -101,7 +101,7 @@ export default function Home() {
                 setShowCreateMessage(true)
                 setShowNearbyMessages(false)
               }}
-              className="absolute bottom-6 right-6 z-20 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute right-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Create a message"
             >
               <PenSquare className="h-6 w-6" />
