@@ -1,4 +1,6 @@
 let username;
+const innerMessageRadius = 400;
+const outerMessageRadius = 1000;
 
 function checkLocalStorageForLogin(){
   if (typeof window !== 'undefined') {
@@ -151,4 +153,4 @@ async function logout(){
 }
 
 
-export { sendMessage, getAllMessages, rateMessage, login, signUp, logout, isLoggedIn, username };
+export { sendMessage, getAllMessages, rateMessage, login, signUp, logout, isLoggedIn, username, innerMessageRadius, outerMessageRadius };

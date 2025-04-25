@@ -5,7 +5,7 @@ import NearbyMessages from "@/components/nearbyMessages"
 import CreateMessage from "@/components/createMessage"
 import Header from "@/components/header"
 import { MessageCircle, PenSquare } from "lucide-react"
-import { getAllMessages, isLoggedIn, sendMessage, username } from "./api/functions"
+import { getAllMessages, isLoggedIn, sendMessage, username, innerMessageRadius} from "./api/functions"
 
 // Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("@/components/map"), {
@@ -62,7 +62,7 @@ export default function Home() {
     setShowCreateMessage(false)
 
     // Refresh nearby messages
-    fetchNearbyMessages(userLocation[0], userLocation[1], 500)
+    fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
   }
 
   return (
@@ -82,7 +82,7 @@ export default function Home() {
             <button
               onClick={() => {
                 if (userLocation) {
-                  fetchNearbyMessages(userLocation[0], userLocation[1], 500)
+                  fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
                 }
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)
