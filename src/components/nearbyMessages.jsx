@@ -1,7 +1,11 @@
 import { motion } from "framer-motion"
-import { X, ThumbsUp, ThumbsDown } from "lucide-react"
+import { X } from "lucide-react"
 import { rateMessage } from "@/pages/api/functions"
 import { useState, useEffect } from "react"
+import BaseTierMessage from "./ui/baseTierMessage"
+import BronzeTierMessage from "./ui/bronzeTierMessage"
+import SilverTierMessage from "./ui/silverTierMessage"
+import GoldTierMessage from "./ui/goldTierMessage"
 
 export default function NearbyMessages({ isOpen, onClose, messages, onMessagesUpdate }) {
   const [isRating, setIsRating] = useState(false);
@@ -41,23 +45,6 @@ export default function NearbyMessages({ isOpen, onClose, messages, onMessagesUp
     }
   };
 
-  const getButtonStyles = (messageId, type) => {
-    const baseStyles = "flex items-center gap-1 transition-colors cursor-pointer";
-    const voted = votedMessages[messageId] === type;
-    
-    if (voted && type === 'positive') {
-      return `${baseStyles} text-green-500`;
-    } else if (voted && type === 'negative') {
-      return `${baseStyles} text-red-500`;
-    } else if (votedMessages[messageId]) {
-      return `${baseStyles} text-zinc-600 cursor-not-allowed`;
-    } else if (type === 'positive') {
-      return `${baseStyles} text-zinc-400 hover:text-green-500`;
-    } else {
-      return `${baseStyles} text-zinc-400 hover:text-red-500`;
-    }
-  };
-
   return (
     <motion.div
       className="absolute bottom-0 left-0 z-30 w-full sm:w-96 bg-zinc-900 text-white rounded-t-xl shadow-xl"
@@ -81,38 +68,29 @@ export default function NearbyMessages({ isOpen, onClose, messages, onMessagesUp
         {messages.length === 0 ? (
           <p className="text-center text-orange-400/70 italic">No messages found nearby. Be the first to leave one!</p>
         ) : (
-          messages.map((message) => (
-            <div key={message.message_id} className="bg-zinc-800 p-3 rounded-lg border-l-4 border-orange-500">
-              <p className="text-white mb-2">{message.content}</p>
-              <div className="flex justify-between items-center">
-                <div className="text-xs text-zinc-400">
-                  <span>{message.username}</span>
-                  <span className="mx-2">•</span>
-                  <span>{new Date(message.timestamp).toLocaleString()}</span>
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleRate(message.message_id, 'positive')}
-                    className={getButtonStyles(message.message_id, 'positive')}
-                    disabled={isRating || votedMessages[message.message_id]}
-                    title={votedMessages[message.message_id] ? "You've already voted" : "Like this message"}
-                  >
-                    <ThumbsUp className="h-4 w-4" />
-                    <span className="text-sm">{message.rating.positive}</span>
-                  </button>
-                  <button
-                    onClick={() => handleRate(message.message_id, 'negative')}
-                    className={getButtonStyles(message.message_id, 'negative')}
-                    disabled={isRating || votedMessages[message.message_id]}
-                    title={votedMessages[message.message_id] ? "You've already voted" : "Dislike this message"}
-                  >
-                    <ThumbsDown className="h-4 w-4" />
-                    <span className="text-sm">{message.rating.negative}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
+          messages.map((message) => {
+            // Determine which tier message to display based on message.rating.positive
+            let MessageComponent;
+            if (message.rating.positive > 50) {
+              MessageComponent = GoldTierMessage;
+            } else if (message.rating.positive > 25) {
+              MessageComponent = SilverTierMessage;
+            } else if (message.rating.positive > 10) {
+              MessageComponent = BronzeTierMessage;
+            } else {
+              MessageComponent = BaseTierMessage;
+            }
+
+            return (
+              <MessageComponent
+                key={message.id} // Assuming message.id exists, you can use a unique key
+                message={message}
+                votedMessages={votedMessages}
+                isRating={isRating}
+                handleRate={handleRate}
+              />
+            );
+          })
         )}
       </div>
     </motion.div>
