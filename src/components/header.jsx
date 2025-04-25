@@ -14,7 +14,7 @@ export default function Header() {
             <li>
               <Link
                 href="/profile"
-                className="text-sm tracking-wider text-tan-300 transition-colors hover:text-orange-400"
+                className="text-sm tracking-wider text-stone-300 transition-colors hover:text-orange-400"
               >
                 Profile
               </Link>
@@ -22,7 +22,7 @@ export default function Header() {
             <li>
               <Link
                 href="/login"
-                className="text-sm tracking-wider text-tan-300 transition-colors hover:text-orange-400"
+                className="text-sm tracking-wider text-stone-300 transition-colors hover:text-orange-400"
               >
                 Login
               </Link>
