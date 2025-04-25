@@ -1,28 +1,20 @@
 import Link from "next/link"
-import { Scroll } from "lucide-react"
+import Image from "next/image"
 
 export default function Header() {
   return (
-    <header className="border-b border-amber-700/30 bg-zinc-900 py-4">
+    <header className="border-b border-orange-700/30 bg-zinc-900 py-3 relative z-50">
       <div className="container mx-auto flex items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <Scroll className="h-6 w-6 text-amber-500" />
-          <span className="text-xl font-bold tracking-wider text-amber-500">SOAPSTONE</span>
+          <Image src="/images/ss-logo.png" alt="Soapstone Logo" width={40} height={40} className="h-10 w-auto" />
+          <span className="text-xl font-bold tracking-wider text-orange-500">Soapstone</span>
         </Link>
         <nav>
           <ul className="flex gap-6">
             <li>
               <Link
-                href="/"
-                className="text-sm uppercase tracking-wider text-zinc-400 transition-colors hover:text-amber-500"
-              >
-                Map
-              </Link>
-            </li>
-            <li>
-              <Link
                 href="/profile"
-                className="text-sm uppercase tracking-wider text-zinc-400 transition-colors hover:text-amber-500"
+                className="text-sm tracking-wider text-tan-300 transition-colors hover:text-orange-400"
               >
                 Profile
               </Link>
@@ -30,7 +22,7 @@ export default function Header() {
             <li>
               <Link
                 href="/login"
-                className="text-sm uppercase tracking-wider text-zinc-400 transition-colors hover:text-amber-500"
+                className="text-sm tracking-wider text-tan-300 transition-colors hover:text-orange-400"
               >
                 Login
               </Link>
