@@ -175,10 +175,30 @@ async function getUserMessages(username) {
   }
 }
 
+async function deleteMessage(messageId) {
+  try {
+    const response = await fetch(`/api/messages/${messageId}`, {
+      method: 'DELETE',
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to delete message');
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting message:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
 export { 
   sendMessage, 
   getAllMessages, 
   getUserMessages,
+  deleteMessage,
   rateMessage, 
   login, 
   signUp, 
