@@ -73,22 +73,25 @@ async function getAllMessages(){
   }
 }
 
-async function deleteMessage(message_id){
+async function deleteMessage(messageId) {
   try {
-    const res = await fetch('/api/messages', {
+    const response = await fetch(`/api/messages/${messageId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messageId: message_id,
-      }),
+      }
     });
 
-    const result = await res.json();
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to delete message');
+    }
+    
     return result;
-  } catch (err) {
-    console.error('Failed to delete message:', err);
+  } catch (error) {
+    console.error('Failed to delete message:', error);
+    throw error; // Propagate the error to handle it in the component
   }
 }
 
