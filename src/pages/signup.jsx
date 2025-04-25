@@ -1,40 +1,63 @@
 import "../app/globals.css";
 import Header from "@/components/header";
+
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { login } from "@/pages/api/functions";
+import { signUp } from "@/pages/api/functions";
 
-export default function LoginPage() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+export default function SignupPage() {
+	const [formData, setFormData] = useState({
+		name: "",
+		password: "",
+		confirmPassword: "",
+	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError("");
 
-		if (!username || !password) {
-			setError("Please fill in all fields");
+		// Basic validation
+		if (!formData.name || !formData.password) {
+			setError("Please fill in all required fields");
+			return;
+		}
+
+		if (formData.password !== formData.confirmPassword) {
+			setError("Passwords do not match");
+			return;
+		}
+
+		if (formData.password.length < 8) {
+			setError("Password must be at least 8 characters long");
 			return;
 		}
 
 		setIsLoading(true);
 
 		try {
-			const res = await login(username, password);
-
+			const res = await signUp(formData.name, formData.password);
 			if (!res) {
-				setError("Invalid username or password");
+				setError("Failed to create account. Please try again.");
 				return;
-			} else {
-				localStorage.setItem("username", username); // store the username in local storage
+			} else { 
+				localStorage.setItem("username", formData.name); // store the username in local storage
 				window.location.href = "/";
 			}
 		} catch (err) {
-			setError("Invalid username or password");
+			console.error("Error signing up:", err);
+			setError("Failed to create account. Please try again.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -47,7 +70,7 @@ export default function LoginPage() {
 				<div className="w-full max-w-md">
 					<div className="bg-zinc-800 rounded-lg shadow-xl p-8 border border-orange-500/20">
 						<h1 className="text-2xl font-bold text-orange-500 mb-6 text-center">
-							Sign In
+							Create Account
 						</h1>
 
 						{error && (
@@ -56,22 +79,22 @@ export default function LoginPage() {
 							</div>
 						)}
 
-						<form onSubmit={handleSubmit} className="space-y-6">
+						<form onSubmit={handleSubmit} className="space-y-5">
 							<div>
 								<label
-									htmlFor="username"
+									htmlFor="name"
 									className="block text-sm font-medium text-orange-400 mb-1"
 								>
-									Username
+									Name
 								</label>
 								<input
-									id="username"
+									id="name"
+									name="name"
 									type="text"
-									value={username}
-									onChange={(e) =>
-										setUsername(e.target.value)
-									}
+									value={formData.name}
+									onChange={handleChange}
 									className="w-full px-4 py-2 bg-zinc-700 text-white rounded-md border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+									placeholder="Your name"
 									required
 								/>
 							</div>
@@ -86,14 +109,14 @@ export default function LoginPage() {
 								<div className="relative">
 									<input
 										id="password"
+										name="password"
 										type={
 											showPassword ? "text" : "password"
 										}
-										value={password}
-										onChange={(e) =>
-											setPassword(e.target.value)
-										}
+										value={formData.password}
+										onChange={handleChange}
 										className="w-full px-4 py-2 bg-zinc-700 text-white rounded-md border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+										placeholder="••••••••"
 										required
 									/>
 									<button
@@ -101,7 +124,7 @@ export default function LoginPage() {
 										onClick={() =>
 											setShowPassword(!showPassword)
 										}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-300 hover:text-orange-400"
+										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-tan-300 hover:text-orange-400"
 										aria-label={
 											showPassword
 												? "Hide password"
@@ -115,6 +138,28 @@ export default function LoginPage() {
 										)}
 									</button>
 								</div>
+								<p className="mt-1 text-xs text-tan-300">
+									Must be at least 8 characters long
+								</p>
+							</div>
+
+							<div>
+								<label
+									htmlFor="confirmPassword"
+									className="block text-sm font-medium text-orange-400 mb-1"
+								>
+									Confirm Password
+								</label>
+								<input
+									id="confirmPassword"
+									name="confirmPassword"
+									type={showPassword ? "text" : "password"}
+									value={formData.confirmPassword}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-zinc-700 text-white rounded-md border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+									placeholder="••••••••"
+									required
+								/>
 							</div>
 
 							<div>
@@ -145,23 +190,23 @@ export default function LoginPage() {
 													d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 												></path>
 											</svg>
-											Signing in...
+											Creating account...
 										</>
 									) : (
-										"Sign in"
+										"Create account"
 									)}
 								</button>
 							</div>
 						</form>
 
 						<div className="mt-6 text-center">
-							<p className="text-zinc-300">
-								Dont have an account?{" "}
+							<p className="text-tan-300">
+								Already have an account?{" "}
 								<Link
-									href="/signup"
+									href="/login"
 									className="text-orange-400 hover:text-orange-300 font-medium"
 								>
-									Sign up
+									Sign in
 								</Link>
 							</p>
 						</div>
