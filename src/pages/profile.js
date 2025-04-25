@@ -50,11 +50,14 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <main className="min-h-screen bg-zinc-900 text-zinc-200">
-        <Header />
+    <div className="min-h-screen bg-zinc-900">
+      {/* Fixed header */}
+      <Header />
+      
+      {/* Scrollable content */}
+      <main className="pt-[64px]"> {/* Adjust pt value to match your header height */}
         <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Profile Header */}
+          {/* Profile Header - Fixed */}
           <div className="bg-zinc-800 rounded-lg p-6 mb-8 border border-orange-500/20">
             <h1 className="text-2xl font-bold text-orange-500 mb-2">
               {username}&apos;s Profile
@@ -64,46 +67,49 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Messages List */}
-          <div className="space-y-4">
+          {/* Messages Section */}
+          <div>
             <h2 className="text-xl font-semibold text-orange-500 mb-4">
               Your Messages
             </h2>
             
-            {userMessages.length === 0 ? (
-              <p className="text-zinc-400 italic">
-                You haven&apos;t posted any messages yet.
-              </p>
-            ) : (
-              userMessages.map((message) => (
-                <div
-                  key={message._id}
-                  className="bg-zinc-800 rounded-lg p-4 border border-orange-500/20 relative group"
-                >
-                  <p className="text-zinc-200 mb-2">{message.content}</p>
-                  <div className="flex justify-between items-center text-sm text-zinc-400">
-                    <div className="flex items-center gap-4">
-                      <span>👍 {message.rating.positive}</span>
-                      <span>👎 {message.rating.negative}</span>
-                    </div>
-                    <span>{new Date(message.timestamp).toLocaleDateString()}</span>
-                  </div>
-                  <div className="mt-2 text-sm text-zinc-500">
-                    Location: {message.location.lat.toFixed(4)}, {message.location.long.toFixed(4)}
-                  </div>
-                  
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => handleDeleteMessage(message._id)}
-                    disabled={isDeleting}
-                    className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-red-500 transition-colors duration-200 opacity-0 group-hover:opacity-100"
-                    title="Delete message"
+            {/* Scrollable Messages Container */}
+            <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-4">
+              {userMessages.length === 0 ? (
+                <p className="text-zinc-400 italic">
+                  You haven&apos;t posted any messages yet.
+                </p>
+              ) : (
+                userMessages.map((message) => (
+                  <div
+                    key={message._id}
+                    className="bg-zinc-800 rounded-lg p-4 border border-orange-500/20 relative group"
                   >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </div>
-              ))
-            )}
+                    <p className="text-zinc-200 mb-2">{message.content}</p>
+                    <div className="flex justify-between items-center text-sm text-zinc-400">
+                      <div className="flex items-center gap-4">
+                        <span>👍 {message.rating.positive}</span>
+                        <span>👎 {message.rating.negative}</span>
+                      </div>
+                      <span>{new Date(message.timestamp).toLocaleDateString()}</span>
+                    </div>
+                    <div className="mt-2 text-sm text-zinc-500">
+                      Location: {message.location.lat.toFixed(4)}, {message.location.long.toFixed(4)}
+                    </div>
+                    
+                    {/* Delete Button */}
+                    <button
+                      onClick={() => handleDeleteMessage(message._id)}
+                      disabled={isDeleting}
+                      className="absolute top-4 right-4 p-2 text-red-500 cursor-pointer"
+                      title="Delete message"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </main>
