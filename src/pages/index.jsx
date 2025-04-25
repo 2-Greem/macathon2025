@@ -5,7 +5,7 @@ import NearbyMessages from "@/components/nearbyMessages"
 import CreateMessage from "@/components/createMessage"
 import Header from "@/components/header"
 import { MessageCircle, PenSquare } from "lucide-react"
-import { getAllMessages, isLoggedIn, sendMessage, username, innerMessageRadius} from "./api/functions"
+import { getAllMessages, isLoggedIn, sendMessage, username, innerMessageRadius, outerMessageRadius} from "./api/functions"
 
 // Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("@/components/map"), {
@@ -22,6 +22,7 @@ export default function Home() {
   const [showCreateMessage, setShowCreateMessage] = useState(false)
   const [userLocation, setUserLocation] = useState(null)
   const [nearbyMessages, setNearbyMessages] = useState([])
+  const [outerMessages, setOuterMessages] = useState([])
 
   // Get user location on component mount
   useEffect(() => {
@@ -39,15 +40,29 @@ export default function Home() {
     }
   }, [])
 
+  // this makes sure the markers load correctly when the page loads up at the start
+  useEffect(() => {
+    if (userLocation) {
+      fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
+    }
+  }, [userLocation])
+
   // Function to fetch nearby messages
-  const fetchNearbyMessages = async (lat, lon, maxDistance) => {
+  const fetchNearbyMessages = async (lat, lon) => {
     const messages = await getAllMessages();
+    const outerFiltered = messages.data.filter(msg => {
+      const dLat = (msg.location.lat - lat) * 111000; // in meters
+      const dLon = (msg.location.long - lon) * 111000 * Math.cos(lat * Math.PI / 180);
+      const distance = Math.sqrt(dLat * dLat + dLon * dLon);
+      return distance <= outerMessageRadius && distance > innerMessageRadius;
+    });
+    setOuterMessages(outerFiltered);
     const filtered = messages.data.filter(msg => {
       const dLat = (msg.location.lat - lat) * 111000; // in meters
       const dLon = (msg.location.long - lon) * 111000 * Math.cos(lat * Math.PI / 180);
       const distance = Math.sqrt(dLat * dLat + dLon * dLon);
-      return distance <= maxDistance;
-  });
+      return distance <= innerMessageRadius;
+    });
     setNearbyMessages(filtered)
   }
 
@@ -62,7 +77,7 @@ export default function Home() {
     setShowCreateMessage(false)
 
     // Refresh nearby messages
-    fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
+    fetchNearbyMessages(userLocation[0], userLocation[1])
   }
 
   return (
@@ -73,7 +88,7 @@ export default function Home() {
       {/* Main content area - Fills remaining space */}
       <main className="relative flex-1 overflow-hidden">
         {/* Map Container */}
-        <div className="absolute inset-0 z-0">{userLocation && <Map center={userLocation} />}</div>
+        <div className="absolute inset-0 z-0">{userLocation && <Map center={userLocation} innerMessages={nearbyMessages} outerMessages={outerMessages}  />}</div>
 
         {/* UI Controls Layer */}
         <div className="absolute inset-0 z-10 pointer-events-none">
@@ -82,7 +97,7 @@ export default function Home() {
             <button
               onClick={() => {
                 if (userLocation) {
-                  fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
+                  fetchNearbyMessages(userLocation[0], userLocation[1])
                 }
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)

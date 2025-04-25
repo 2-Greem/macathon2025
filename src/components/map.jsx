@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
 // Component to update map view when center prop changes
-function ChangeView({ center }) {
+function ChangeView({ center}) {
   const map = useMap()
   useEffect(() => {
     map.setView(center, 16)
@@ -15,31 +15,31 @@ function ChangeView({ center }) {
   return null
 }
 
-export default function Map({ center }) {
+export default function Map({ center, innerMessages, outerMessages  }) {
   const isMounted = useRef(false)
-  const [innerMessages, setInnerMessages] = useState([]);
-  const [outerMessages, setOuterMessages] = useState([]);
+  // const [innerMessages, setInnerMessages] = useState([]);
+  // const [outerMessages, setOuterMessages] = useState([]);
 
   // Get all messages in a 500m radius
   // Function to fetch nearby messages
-  const fetchNearbyMessages = async (center, outerDistance, innerDistance) => {
-    const [lat, long] = center;
-    const messages = await getAllMessages();
-    const outerFiltered = messages.data.filter(msg => {
-      const dLat = (msg.location.lat - lat) * 111000; // in meters
-      const dLon = (msg.location.long - long) * 111000 * Math.cos(lat * Math.PI / 180);
-      const distance = Math.sqrt(dLat * dLat + dLon * dLon);
-      return distance <= outerDistance && distance > innerDistance;
-    });
-    setOuterMessages(outerFiltered);
-    const innerFiltered = messages.data.filter(msg => {
-      const dLat = (msg.location.lat - lat) * 111000; // in meters
-      const dLon = (msg.location.long - long) * 111000 * Math.cos(lat * Math.PI / 180);
-      const distance = Math.sqrt(dLat * dLat + dLon * dLon);
-      return distance <= innerDistance;
-    });
-    setInnerMessages(innerFiltered);
-  }
+  // const fetchNearbyMessages = async (center, outerDistance, innerDistance) => {
+  //   const [lat, long] = center;
+  //   const messages = await getAllMessages();
+  //   const outerFiltered = messages.data.filter(msg => {
+  //     const dLat = (msg.location.lat - lat) * 111000; // in meters
+  //     const dLon = (msg.location.long - long) * 111000 * Math.cos(lat * Math.PI / 180);
+  //     const distance = Math.sqrt(dLat * dLat + dLon * dLon);
+  //     return distance <= outerDistance && distance > innerDistance;
+  //   });
+  //   setOuterMessages(outerFiltered);
+  //   const innerFiltered = messages.data.filter(msg => {
+  //     const dLat = (msg.location.lat - lat) * 111000; // in meters
+  //     const dLon = (msg.location.long - long) * 111000 * Math.cos(lat * Math.PI / 180);
+  //     const distance = Math.sqrt(dLat * dLat + dLon * dLon);
+  //     return distance <= innerDistance;
+  //   });
+  //   setInnerMessages(innerFiltered);
+  // }
 
   useEffect(() => {
     if (!isMounted.current) {
@@ -55,9 +55,9 @@ export default function Map({ center }) {
   }, [])
 
   // Call fetchNearbyMessages when the center changes
-  useEffect(() => {
-    fetchNearbyMessages(center, outerMessageRadius, innerMessageRadius); // 1000m outer radius, 500m inner radius
-  }, [center]);
+  // useEffect(() => {
+  //   fetchNearbyMessages(center, outerMessageRadius, innerMessageRadius); // 1000m outer radius, 500m inner radius
+  // }, [center]);
 
   return (
     <div className="leaflet-container" style={{ height: "100%", width: "100%" }}>
