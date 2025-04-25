@@ -23,6 +23,23 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState(null)
   const [nearbyMessages, setNearbyMessages] = useState([])
 
+  // Handle viewport height for mobile browsers
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setVH();
+    window.addEventListener('resize', setVH);
+    window.addEventListener('orientationchange', setVH);
+
+    return () => {
+      window.removeEventListener('resize', setVH);
+      window.removeEventListener('orientationchange', setVH);
+    };
+  }, []);
+
   // Get user location on component mount
   useEffect(() => {
     if (navigator.geolocation) {
@@ -66,14 +83,16 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden">
+    <div className="full-screen flex flex-col overflow-hidden">
       {/* Header - Always on top */}
       <Header />
 
       {/* Main content area - Fills remaining space */}
-      <main className="relative flex-1 overflow-hidden">
+      <main className="flex-1 relative overflow-hidden">
         {/* Map Container */}
-        <div className="absolute inset-0 z-0">{userLocation && <Map center={userLocation} />}</div>
+        <div className="absolute inset-0 z-0">
+          {userLocation && <Map center={userLocation} />}
+        </div>
 
         {/* UI Controls Layer */}
         <div className="absolute inset-0 z-10 pointer-events-none">
@@ -87,10 +106,10 @@ export default function Home() {
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)
               }}
-              className="absolute left-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute left-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Show nearby messages"
             >
-              <MessageCircle className="h-6 w-6" />
+              <MessageCircle className="h-8 w-8" />
             </button>
           )}
 
@@ -101,10 +120,10 @@ export default function Home() {
                 setShowCreateMessage(true)
                 setShowNearbyMessages(false)
               }}
-              className="absolute right-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute right-6 z-20 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Create a message"
             >
-              <PenSquare className="h-6 w-6" />
+              <PenSquare className="h-8 w-8" />
             </button>
           )}
 
