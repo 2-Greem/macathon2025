@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { sendMessage, getAllMessages, rateMessage } from './api/functions';
+import { sendMessage, getAllMessages, rateMessage, login, signUp } from './api/functions';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -16,6 +16,10 @@ export default function Home() {
       positive: 0,
       negative: 4
     }
+  })
+  const [loginForm, setLoginForm] = useState({
+    username: '',
+    password: ''
   })
 
   useEffect(() => {
@@ -41,6 +45,10 @@ export default function Home() {
   const handleChangeMessage = (e) => {
     setMessageForm({ ...messageForm, [e.target.name]: e.target.value });
   };
+
+  const handleChangeLogin = (e) => {
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value});
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,6 +89,16 @@ export default function Home() {
     }
   };
 
+  const pressToLogin = async (e) => {
+    e.preventDefault();
+    await login(loginForm.username, loginForm.password);
+  }
+
+  const pressTosignUp = async (e) => {
+    e.preventDefault();
+    await signUp(loginForm.username, loginForm.password);
+  }
+
   const voteYes = async (e) => {
     rateMessage("0", 'positive');
     fetchMessages();
@@ -89,6 +107,23 @@ export default function Home() {
   const voteNo = async (e) => {
     rateMessage("0", 'negative');
     fetchMessages();
+  }
+
+  const pressForLocation = async(e) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+    
+  function success(position) {
+    console.log("Latitude: " + position.coords.latitude +
+    " Longitude: " + position.coords.longitude);
+  }
+    
+  function error() {
+    alert("Sorry, no position available.");
   }
   
 
@@ -151,6 +186,27 @@ export default function Home() {
         </h2>
         <button onClick={voteYes}>Helpful</button>
         <button onClick={voteNo}>Unhelpful</button>
+        <h2>
+          Geolocation
+        </h2>
+        <button onClick={pressForLocation}>Get Location</button>
+      </div>
+      <div>
+        <h2>Login/SignIn</h2>
+        <form>
+          <input
+            name="username"
+            placeholder="username"
+            value={loginForm.username}
+            onChange={handleChangeLogin}/>
+          <input
+            name="password"
+            placeholder="password"
+            value={loginForm.password}
+            onChange={handleChangeLogin}/>
+          <button onClick={pressToLogin}>Log In</button>
+          <button onClick={pressTosignUp}>Sign Up</button>
+        </form>
       </div>
     </div>
   );
