@@ -1,14 +1,13 @@
-"use client"
 import "../app/globals.css"
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
-import NearbyMessages from "@/components/NearbyMessages"
-import CreateMessage from "@/components/CreateMessage"
+import NearbyMessages from "@/components/nearbyMessages"
+import CreateMessage from "@/components/createMessage"
 import Header from "@/components/header"
 import { MessageCircle, PenSquare } from "lucide-react"
 
 // Dynamically import the Map component with no SSR
-const Map = dynamic(() => import("@/components/Map"), {
+const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center w-full h-full bg-zinc-900">
