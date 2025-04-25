@@ -1,12 +1,77 @@
 import "../app/globals.css";
 import Header from "@/components/header";
+import { getUserMessages } from "@/pages/api/functions";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const [userMessages, setUserMessages] = useState([]);
+  const [username, setUsername] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (!storedUsername) {
+      router.push('/login');
+      return;
+    }
+    
+    setUsername(storedUsername);
+    const fetchUserMessages = async () => {
+      const messages = await getUserMessages(storedUsername);
+      setUserMessages(messages.data);
+    };
+
+    fetchUserMessages();
+  }, [router]);
+
   return (
     <div>
       <main className="min-h-screen bg-zinc-900 text-zinc-200">
         <Header />
-        The profile page
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          {/* Profile Header */}
+          <div className="bg-zinc-800 rounded-lg p-6 mb-8 border border-orange-500/20">
+            <h1 className="text-2xl font-bold text-orange-500 mb-2">
+              {username}&apos;s Profile
+            </h1>
+            <p className="text-zinc-400">
+              Total Messages: {userMessages.length}
+            </p>
+          </div>
+
+          {/* Messages List */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-orange-500 mb-4">
+              Your Messages
+            </h2>
+            
+            {userMessages.length === 0 ? (
+              <p className="text-zinc-400 italic">
+                You haven&apos;t posted any messages yet.
+              </p>
+            ) : (
+              userMessages.map((message) => (
+                <div
+                  key={message._id}
+                  className="bg-zinc-800 rounded-lg p-4 border border-orange-500/20"
+                >
+                  <p className="text-zinc-200 mb-2">{message.content}</p>
+                  <div className="flex justify-between items-center text-sm text-zinc-400">
+                    <div className="flex items-center gap-4">
+                      <span>👍 {message.rating.positive}</span>
+                      <span>👎 {message.rating.negative}</span>
+                    </div>
+                    <span>{new Date(message.timestamp).toLocaleDateString()}</span>
+                  </div>
+                  <div className="mt-2 text-sm text-zinc-500">
+                    Location: {message.location.lat.toFixed(4)}, {message.location.long.toFixed(4)}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

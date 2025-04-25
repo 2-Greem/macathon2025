@@ -152,5 +152,39 @@ async function logout(){
   username;
 }
 
+async function getUserMessages(username) {
+  try {
+    // TODO make new endpoint for this
+    const response = await getAllMessages();
+    if (!response.success) {
+      throw new Error('Failed to fetch messages');
+    }
+    
+    // Filter messages for the specific user
+    const userMessages = response.data.filter(message => message.username === username);
+    return {
+      success: true,
+      data: userMessages
+    };
+  } catch (error) {
+    console.error('Error getting user messages:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
 
-export { sendMessage, getAllMessages, rateMessage, login, signUp, logout, isLoggedIn, username, innerMessageRadius, outerMessageRadius };
+export { 
+  sendMessage, 
+  getAllMessages, 
+  getUserMessages,
+  rateMessage, 
+  login, 
+  signUp, 
+  logout, 
+  isLoggedIn, 
+  username, 
+  innerMessageRadius, 
+  outerMessageRadius 
+};
