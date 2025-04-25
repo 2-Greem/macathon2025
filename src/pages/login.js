@@ -24,10 +24,15 @@ export default function LoginPage() {
 		setIsLoading(true);
 
 		try {
-			// Replace with actual authentication logic
 			const res = await login(username, password);
-			console.log(res);
-			window.location.href = "/";
+
+			if (!res) {
+				setError("Invalid username or password");
+				return;
+			} else {
+				localStorage.setItem("username", username); // store the username in local storage
+				window.location.href = "/";
+			}
 		} catch (err) {
 			setError("Invalid username or password");
 		} finally {

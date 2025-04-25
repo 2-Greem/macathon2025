@@ -3,13 +3,12 @@ import Header from "@/components/header";
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
+import { signUp } from "@/pages/api/functions";
 
 export default function SignupPage() {
 	const [formData, setFormData] = useState({
 		name: "",
-		email: "",
 		password: "",
 		confirmPassword: "",
 	});
@@ -30,7 +29,7 @@ export default function SignupPage() {
 		setError("");
 
 		// Basic validation
-		if (!formData.name || !formData.email || !formData.password) {
+		if (!formData.name || !formData.password) {
 			setError("Please fill in all required fields");
 			return;
 		}
@@ -47,14 +46,17 @@ export default function SignupPage() {
 
 		setIsLoading(true);
 
-		// Simulate API call
 		try {
-			// Replace with actual registration logic
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			console.log("Signup attempt with:", formData);
-			// Redirect to home page after successful signup
-			window.location.href = "/";
+			const res = await signUp(formData.name, formData.password);
+			if (!res) {
+				setError("Failed to create account. Please try again.");
+				return;
+			} else { 
+				localStorage.setItem("username", formData.name); // store the username in local storage
+				window.location.href = "/";
+			}
 		} catch (err) {
+			console.error("Error signing up:", err);
 			setError("Failed to create account. Please try again.");
 		} finally {
 			setIsLoading(false);
@@ -93,25 +95,6 @@ export default function SignupPage() {
 									onChange={handleChange}
 									className="w-full px-4 py-2 bg-zinc-700 text-white rounded-md border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none"
 									placeholder="Your name"
-									required
-								/>
-							</div>
-
-							<div>
-								<label
-									htmlFor="email"
-									className="block text-sm font-medium text-orange-400 mb-1"
-								>
-									Email
-								</label>
-								<input
-									id="email"
-									name="email"
-									type="email"
-									value={formData.email}
-									onChange={handleChange}
-									className="w-full px-4 py-2 bg-zinc-700 text-white rounded-md border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-									placeholder="your@email.com"
 									required
 								/>
 							</div>

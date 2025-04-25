@@ -94,16 +94,14 @@ async function signUp(username, password){
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
-
     if (!response.ok) {
-      //throw new Error(result.error || 'Failed to sign up');
-    }
-    username = result.data.username;
-    return result; // the created message
+      return false;
+    } else {
+      return true;
+	  }
   } catch (error) {
     console.error('Error signing up:', error.message);
-    //throw error;
+
   }
 }
 
@@ -121,16 +119,14 @@ async function login(username, password){
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
-
     if (!response.ok) {
-      //throw new Error(result.error || 'Failed to login');
-    }
-    username = result.data.username;
-    return result; // the created message
+      return false;
+    } else {
+      return true;
+	  }
+    
   } catch (error) {
     console.error('Error logging in:', error.message);
-    //throw error;
   }
 }
 
