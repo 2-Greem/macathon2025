@@ -8,11 +8,11 @@ import Header from "@/components/header"
 import { MessageCircle, PenSquare } from "lucide-react"
 
 // Dynamically import the Map component with no SSR
-const Map = dynamic(() => import("@/components/map"), {
+const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center w-full h-full bg-slate-800">
-      <div className="text-amber-500 text-xl">Loading map...</div>
+    <div className="flex items-center justify-center w-full h-full bg-zinc-900">
+      <div className="text-orange-500 text-xl">Loading map...</div>
     </div>
   ),
 })
@@ -104,7 +104,7 @@ export default function Home() {
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)
               }}
-              className="absolute bottom-6 left-6 z-20 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute bottom-6 left-6 z-20 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Show nearby messages"
             >
               <MessageCircle className="h-6 w-6" />
@@ -118,7 +118,7 @@ export default function Home() {
                 setShowCreateMessage(true)
                 setShowNearbyMessages(false)
               }}
-              className="absolute bottom-6 right-6 z-20 bg-amber-500 hover:bg-amber-600 text-slate-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
+              className="absolute bottom-6 right-6 z-20 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-zinc-900 p-3 rounded-full shadow-lg transition-all duration-300 pointer-events-auto"
               aria-label="Create a message"
             >
               <PenSquare className="h-6 w-6" />
