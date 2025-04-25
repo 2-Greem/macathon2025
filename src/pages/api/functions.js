@@ -204,7 +204,6 @@ export {
   signUp, 
   logout, 
   isLoggedIn, 
-  deleteMessage,
   username, 
   innerMessageRadius, 
   outerMessageRadius 

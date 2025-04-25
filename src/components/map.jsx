@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from "react-leaflet"
 import { redMarkerIcon, greyMarkerIcon, goldMarkerIcon } from "./ui/markers"
+import SnapBackToCenter from "./snapBackToCenter"
 import { getAllMessages, innerMessageRadius, outerMessageRadius} from "@/pages/api/functions"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
@@ -68,6 +69,7 @@ export default function Map({ center }) {
         attributionControl={false}
       >
         <ChangeView center={center} />
+        <SnapBackToCenter center={center} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
