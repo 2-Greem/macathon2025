@@ -2,10 +2,21 @@ let username;
 
 function checkLocalStorageForLogin(){
   if (typeof window !== 'undefined') {
-    username = localStorage.getItem('username');
-    return username;
+    if (localStorage.getItem('username') !== null){
+      username = localStorage.getItem('username');
+      return username;
+    }
   }
   return;
+}
+
+function isLoggedIn(){
+  checkLocalStorageForLogin()
+  if (!!username){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 async function sendMessage( username, content, latitude, longitude) {
@@ -97,13 +108,13 @@ async function signUp(username, password){
     const result = await response.json();
 
     if (!response.ok) {
-      //throw new Error(result.error || 'Failed to sign up');
+      throw new Error(result.error || 'Failed to sign up');
     }
     username = result.data.username;
     return result; // the created message
   } catch (error) {
     console.error('Error signing up:', error.message);
-    //throw error;
+    throw error;
   }
 }
 
@@ -124,23 +135,28 @@ async function login(username, password){
     const result = await response.json();
 
     if (!response.ok) {
-      //throw new Error(result.error || 'Failed to login');
+      throw new Error(result.error || 'Failed to login');
     }
     username = result.data.username;
-    return result; // the created message
+    // Set it in local storage if you can
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('username', username);
+    }
+
+    return result; // the result idk
   } catch (error) {
     console.error('Error logging in:', error.message);
-    //throw error;
+    throw error;
   }
 }
 
 async function logout(){
   // clear out the username data
-  localStorage.removeItem('username');
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('username');
+  }
   username;
 }
 
-// if there's a user in local storage it logs them in
-checkLocalStorageForLogin()
 
-export { sendMessage, getAllMessages, rateMessage, login, signUp, logout };
+export { sendMessage, getAllMessages, rateMessage, login, signUp, logout, isLoggedIn, username };

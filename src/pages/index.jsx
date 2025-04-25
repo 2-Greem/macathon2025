@@ -5,6 +5,7 @@ import NearbyMessages from "@/components/nearbyMessages"
 import CreateMessage from "@/components/createMessage"
 import Header from "@/components/header"
 import { MessageCircle, PenSquare } from "lucide-react"
+import { getAllMessages, isLoggedIn, sendMessage, username } from "./api/functions"
 
 // Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("@/components/map"), {
@@ -38,47 +39,30 @@ export default function Home() {
     }
   }, [])
 
-  // Mock function to fetch nearby messages
-  const fetchNearbyMessages = (lat, lng) => {
-    // This would be replaced with an actual API call
-    const mockMessages = [
-      {
-        id: 1,
-        content: "Try finger but hole",
-        location: [lat + 0.001, lng - 0.001],
-        author: "Anonymous",
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        content: "Praise the sun!",
-        location: [lat - 0.002, lng + 0.002],
-        author: "Solaire",
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        content: "Beware of dog",
-        location: [lat + 0.003, lng + 0.001],
-        author: "Warrior",
-        timestamp: new Date().toISOString(),
-      },
-    ]
-    setNearbyMessages(mockMessages)
+  // Function to fetch nearby messages
+  const fetchNearbyMessages = async (lat, lon, maxDistance) => {
+    const messages = await getAllMessages();
+    const filtered = messages.data.filter(msg => {
+      const dLat = (msg.location.lat - lat) * 111000; // in meters
+      const dLon = (msg.location.long - lon) * 111000 * Math.cos(lat * Math.PI / 180);
+      const distance = Math.sqrt(dLat * dLat + dLon * dLon);
+      return distance <= maxDistance;
+  });
+    setNearbyMessages(filtered)
   }
 
   // Handle creating a new message
   const handleCreateMessage = (message) => {
     if (!userLocation) return
 
-    // This would be replaced with an actual API call
-    console.log("Creating message:", message, "at location:", userLocation)
+    // API Call - Need to replace the user stuff
+    sendMessage(username, message, userLocation[0], userLocation[1]);
 
     // Close the create message popup
     setShowCreateMessage(false)
 
     // Refresh nearby messages
-    fetchNearbyMessages(userLocation[0], userLocation[1])
+    fetchNearbyMessages(userLocation[0], userLocation[1], 500)
   }
 
   return (
@@ -98,7 +82,7 @@ export default function Home() {
             <button
               onClick={() => {
                 if (userLocation) {
-                  fetchNearbyMessages(userLocation[0], userLocation[1])
+                  fetchNearbyMessages(userLocation[0], userLocation[1], 500)
                 }
                 setShowNearbyMessages(true)
                 setShowCreateMessage(false)

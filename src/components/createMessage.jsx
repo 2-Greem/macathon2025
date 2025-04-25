@@ -1,9 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { X } from "lucide-react"
+import { isLoggedIn } from "@/pages/api/functions"
 
 export default function CreateMessage({ isOpen, onClose, onSubmit }) {
   const [message, setMessage] = useState("")
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const status = await isLoggedIn()
+      setLoggedIn(status)
+    }
+    checkLoginStatus()
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -44,16 +54,23 @@ export default function CreateMessage({ isOpen, onClose, onSubmit }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full h-32 p-3 bg-zinc-800 text-white rounded-lg border border-orange-500/30 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none resize-none"
-            placeholder="Write your message here..."
+            placeholder={loggedIn ? "Write your message here..." : "You must be logged in to leave a message."}
             maxLength={100}
+            disabled={!loggedIn}
           />
           <p className="text-right text-xs text-orange-400/70 mt-1">{message.length}/100 characters</p>
         </div>
 
+        {!loggedIn && (
+          <p className="text-sm text-orange-400">
+            Please <a href="/login" className="underline hover:text-orange-300">log in</a> to leave a message.
+          </p>
+        )}
+
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={!message.trim()}
+            disabled={!message.trim() || !loggedIn}
             className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-900 font-bold py-2 px-4 rounded-lg transition-colors"
           >
             Leave Message
