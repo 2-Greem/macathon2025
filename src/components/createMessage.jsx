@@ -1,0 +1,67 @@
+"use client"
+
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { X } from "lucide-react"
+
+export default function CreateMessage({ isOpen, onClose, onSubmit }) {
+  const [message, setMessage] = useState("")
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (message.trim()) {
+      onSubmit(message)
+      setMessage("")
+    }
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <motion.div
+      className="absolute bottom-0 right-0 z-30 w-full sm:w-96 bg-slate-800 text-amber-50 rounded-t-xl shadow-xl"
+      initial={{ y: "100%" }}
+      animate={{ y: 0 }}
+      exit={{ y: "100%" }}
+      transition={{ type: "spring", damping: 30, stiffness: 300 }}
+    >
+      <div className="flex justify-between items-center p-4 border-b border-amber-500/30">
+        <h2 className="text-xl font-bold text-amber-500">Leave a Message</h2>
+        <button
+          onClick={onClose}
+          className="text-amber-500 hover:text-amber-400 transition-colors"
+          aria-label="Close message creation"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <div>
+          <label htmlFor="message" className="block text-sm font-medium text-amber-400 mb-1">
+            Your message:
+          </label>
+          <textarea
+            id="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full h-32 p-3 bg-slate-700 text-amber-50 rounded-lg border border-amber-500/30 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none resize-none"
+            placeholder="Write your message here..."
+            maxLength={100}
+          />
+          <p className="text-right text-xs text-amber-400/70 mt-1">{message.length}/100 characters</p>
+        </div>
+
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            disabled={!message.trim()}
+            className="bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/50 disabled:cursor-not-allowed text-slate-900 font-bold py-2 px-4 rounded-lg transition-colors"
+          >
+            Leave Message
+          </button>
+        </div>
+      </form>
+    </motion.div>
+  )
+}
