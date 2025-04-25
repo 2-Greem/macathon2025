@@ -1,8 +1,11 @@
 let username;
 
 function checkLocalStorageForLogin(){
-  username = localStorage.getItem('username');
-  return username;
+  if (typeof window !== 'undefined') {
+    username = localStorage.getItem('username');
+    return username;
+  }
+  return;
 }
 
 async function sendMessage( username, content, latitude, longitude) {
