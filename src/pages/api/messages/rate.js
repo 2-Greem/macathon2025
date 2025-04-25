@@ -1,3 +1,5 @@
+// src/pages/api/messages/rate.js
+
 import dbConnect from '../../../lib/mongodb';
 import Message from '../../../models/Message';
 

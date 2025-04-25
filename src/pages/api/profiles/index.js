@@ -1,3 +1,5 @@
+// src/pages/api/profiles/index.js
+
 import dbConnect from '../../../lib/mongodb';
 import Profile from '../../../models/Profile';
 

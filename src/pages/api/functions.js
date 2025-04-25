@@ -73,6 +73,25 @@ async function getAllMessages(){
   }
 }
 
+async function deleteMessage(message_id){
+  try {
+    const res = await fetch('/api/messages', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messageId: message_id,
+      }),
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error('Failed to delete message:', err);
+  }
+}
+
 async function rateMessage(message_id, type){
   try {
     const res = await fetch('/api/messages/rate', {
@@ -172,25 +191,6 @@ async function getUserMessages(username) {
       success: false,
       error: error.message
     };
-  }
-}
-
-async function deleteMessage(messageId) {
-  try {
-    const response = await fetch(`/api/messages/${messageId}`, {
-      method: 'DELETE',
-    });
-    
-    const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.error || 'Failed to delete message');
-    }
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error deleting message:', error.message);
-    return { success: false, error: error.message };
   }
 }
 
