@@ -82,6 +82,13 @@ export default function Home() {
     fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius)
   }
 
+  // Function to refresh nearby messages
+  const refreshNearbyMessages = () => {
+    if (userLocation) {
+      fetchNearbyMessages(userLocation[0], userLocation[1], innerMessageRadius);
+    }
+  };
+
   return (
     <div className="full-screen flex flex-col overflow-hidden">
       {/* Header - Always on top */}
@@ -133,6 +140,7 @@ export default function Home() {
               isOpen={showNearbyMessages}
               onClose={() => setShowNearbyMessages(false)}
               messages={nearbyMessages}
+              onMessagesUpdate={refreshNearbyMessages}
             />
 
             <CreateMessage
