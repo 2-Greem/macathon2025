@@ -85,7 +85,7 @@ export default function Home() {
                     key={message._id}
                     className="bg-zinc-800 rounded-lg p-4 border border-orange-500/20 relative group"
                   >
-                    <p className="text-zinc-200 mb-2">{message.content}</p>
+                    <p className="text-zinc-200 mb-2 pr-10">{message.content}</p>
                     <div className="flex justify-between items-center text-sm text-zinc-400">
                       <div className="flex items-center gap-4">
                         <span>👍 {message.rating.positive}</span>
